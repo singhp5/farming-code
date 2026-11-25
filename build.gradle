@@ -1,0 +1,77 @@
+buildscript {
+  ext {
+      checkstyleVersion = "10.25.0"
+      commonsLangVersion = "3.17.0"
+      company = "logicgate"
+      dependencyManagementVersion = "1.1.7"
+      gradleWrapperVersion = "8.14.1"
+      hamcrestVersion = "3.0"
+      h2Version = "2.3.232"
+      springBootVersion = "3.5.0"
+      slf4jVersion = "2.0.17"
+  }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
+  }
+}
+
+plugins {
+  id "java"
+  id "application"
+  id "checkstyle"
+  id "distribution"
+  id "idea"
+  id("org.springframework.boot") version "${springBootVersion}"
+  id("io.spring.dependency-management") version "${dependencyManagementVersion}"
+}
+
+group = "com.logicgate"
+version = "1.0.0"
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation "com.h2database:h2:${h2Version}"
+  implementation "com.puppycrawl.tools:checkstyle:${checkstyleVersion}"
+  implementation "org.apache.commons:commons-lang3:${commonsLangVersion}"
+  implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+  implementation "org.springframework.boot:spring-boot-starter-actuator"
+  implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+  implementation "org.springframework.boot:spring-boot-starter-web"
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
+  testImplementation "org.hamcrest:hamcrest:${hamcrestVersion}"
+}
+
+idea {
+  module {
+    inheritOutputDirs = true
+  }
+}
+application {
+    mainClass = "com.logicgate.farm.Application"
+}
+
+checkstyle {
+  configFile = file("${project.rootDir}/checkstyle.xml")
+  toolVersion = "${checkstyleVersion}"
+  ignoreFailures = false
+  showViolations = true
+}
+
+wrapper {
+  gradleVersion = "${gradleWrapperVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
